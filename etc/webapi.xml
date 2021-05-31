@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/Gama/marketers/:idMarketers" method="GET">
+        <service class="GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/Gama/marketers/search" method="GET">
+        <service class="GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/Gama/marketers" method="POST">
+        <service class="GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/Gama/marketers/:id" method="PUT">
+        <service class="GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/Gama/marketers/:idMarketers" method="DELETE">
+        <service class="GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

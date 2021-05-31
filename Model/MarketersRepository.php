@@ -7,9 +7,13 @@ use GamaAcademy\MarketersRegister\Model\ResourceModel\MarketersRegister\MarkColl
 use GamaAcademy\MarketersRegister\Api\Data\MarketersInterface;
 use GamaAcademy\MarketersRegister\Api\MarketersRepositoryInterface;
 use GamaAcademy\MarketersRegister\Api\Data\MarketersInterfaceFactory;
-
+use Magento\Framework\Api\SearchCriteria\CollectionProcessor;
 use GamaAcademy\MarketersRegister\Model\ResourceModel\MarketersRegister as ResourceModel;
+use Laminas\Hydrator\HydratorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Tests\NamingConvention\true\bool;
 
 class MarketersRepository implements MarketersRepositoryInterface
 {
@@ -17,6 +21,11 @@ class MarketersRepository implements MarketersRepositoryInterface
      * @var MarketersInterfaceFactory
      */
     private $marketersFactory;
+
+    /**
+     * @var CollectionProcessor
+     */
+    private $collectionProcessor;
 
     /**
      * @var ResourceModel
@@ -35,10 +44,17 @@ class MarketersRepository implements MarketersRepositoryInterface
     private $searchResultFactory;
 
     /**
+     * var HydratorInterface
+     */
+    private  $hydrator;
+
+    /**
      * MarketersRepository constructor
      * @params MarketersInterfaceFactory $marketersFactory
+     * @params CollectionProcessor $collectionProcessor
      * @params ResourceModel $rm
      * @params MarkCollectionFactory $markCollectionFactory
+     * @params HydratorInterface $hydrator
      * @params MarketersSearchInterfaceFactory $searchResultFactory
      */
     public function __construct(
@@ -46,12 +62,16 @@ class MarketersRepository implements MarketersRepositoryInterface
         MarketersInterfaceFactory $marketersFactory,
         ResourceModel $rm,
         MarkCollectionFactory $markCollectionFactory,
+        CollectionProcessor $collectionProcessor,
+        HydratorInterface $hydrator,
         MarketersSearchInterfaceFactory $searchResultFactory
     ) {
         $this->marketersFactory = $marketersFactory;
         $this->rm = $rm;
+        $this->collectionProcessor = $collectionProcessor;
         $this->markCollectionFactory =$markCollectionFactory;
         $this->searchResultFactory = $searchResultFactory;
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -77,15 +97,71 @@ class MarketersRepository implements MarketersRepositoryInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteriaInterface)
     {
-        // TODO: Implement getList() method.
+
         /**
          * @var \GamaAcademy\MarketersRegister\Model\ResourceModel\MarketersRegister\MarketersCollection $marketersCollection
          *
          */
         $marketersCollection = $this->markCollectionFactory->create();
 
-        $this->
+        $this->collectionProcessor->process($searchCriteriaInterface, $marketersCollection);
 
+        /**@var \GamaAcademy\MarketersRegister\Api\Data\MarketersSearchResultInterface $markSearchResult */
+        $markSearchResult = $this->searchResultFactory->create();
+        $markSearchResult->setSearchCriteria(($searchCriteriaInterface));
+        $markSearchResult->setItems($marketersCollection->getItems());
+        $markSearchResult->setTotalCount($marketersCollection->getSize());
+        return $markSearchResult;
+
+    }
+
+    /**
+     * BlockRepository como base
+     * SAVE
+     * @params \GamaAcademy\MarketersRegister\Api|Data\MarketersInterface $marketers
+     * @return \GamaAcademy\MarketersRegister\Api|Data\MarketersInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function save(MarketersInterface $marketers)
+    {
+        /**Altera dados na API**/
+        if($marketers->getId() && $marketers instanceof Marketers && !$marketers->getOrigData()){
+            $marketers = $this->hydrator->hydrate($this->getById($marketers->getId()), $this->hydrator->extract($marketers));
+        }
+        try {
+            $this->rm->save($marketers);
+        }catch (\Exception $exception){
+            throw new CouldNotSaveException(__($exception->getMessage()));
+        }
+        return $marketers;
+    }
+
+    /**
+     * DELETE
+     * @params \GamaAcademy\MarketersRegister\Api|Data\MarketersInterface $marketers
+     * @return bool true on success
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function delete(MarketersInterface $marketers)
+    {
+        try {
+            $this->rm->delete($marketers);
+        }catch (\Exception $exception){
+            throw new CouldNotDeleteException(__($exception->getMessage()));
+        }
+        return true;
+    }
+
+    /**
+     * DELETE ID
+     * @params string $idMarketers
+     * @return \GamaAcademy\MarketersRegister\Api|Data\MarketersInterface $marketers
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * */
+    public function deleteById($idMarketers)
+    {
+        // TODO: Implement deleteById() method.
+        return $this->delete($this->getById($idMarketers));
     }
 }
 

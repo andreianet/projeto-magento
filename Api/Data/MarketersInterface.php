@@ -10,59 +10,49 @@ interface MarketersInterface
     const DATE_UPDATE = 'date_update';
 
     /**
-     * @return int/null
+     * @return int|null
      */
     public function getId();
 
     /**
-     * @return string/null
+     * @return string|null
      */
     public function getName() :?string;
 
     /**
-     * @return string/null
+     * @return string|null
      */
     public function getDATE_CREATED() :?string;
 
     /**
-     * @return string/null
+     * @return string|null
      */
     public function getDATE_UPDATE() :?string;
 
 
     /**
      * @params int $id
+     * @param $id
      * @return MarketersInterface
      */
-    public function setId($id) :MarketersInterface
-    {
-        return $this->setData(self::ID, $id);
-    }
+    public function setId($id): MarketersInterface;
 
     /**
      * @params string $name
      * @return MarketersInterface
      */
-    public function setName($name) :MarketersInterface
-    {
-        return $this->setData(self::NAME, $name);
-    }
+    public function setName($name) :MarketersInterface;
 
     /**
      * @params string $date_created
      * @return MarketersInterface
      */
-    public function setDATE_CREATED($date_created) :MarketersInterface
-    {
-        return $this->setData(self::DATE_CREATED, $date_created);
-    }
+    public function setDATE_CREATED($date_created) :MarketersInterface;
 
     /**
      * @params string $date_date_update
      * @return MarketersInterface
      */
-    public function setDateUpdate($date_update) :MarketersInterface
-    {
-        return $this->setData(self::DATE_UPDATE, $date_update);
-    }
+    public function setDateUpdate($date_update) :MarketersInterface;
+
 }
