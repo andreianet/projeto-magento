@@ -2,7 +2,7 @@
 
 namespace GamaAcademy\MarketersRegister\Model\ResourceModel\MarketersRegister;
 
-class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+class MarketersCollection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     /**
      * Define resource model

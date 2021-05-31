@@ -17,7 +17,8 @@ interface MarketersRepositoryInterface
     /**
      * Listar Marketers - Feirantes
      * @params SearchCriteriaInterface $searchCriteriaInterface
-     * @return GamaAcademy\MarketersRegister\Api\Data\MarketersSearchresultInterface
+     * @return GamaAcademy\MarketersRegister\Api\Data\MarketersSearchResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public  function getList(SearchCriteriaInterface $searchCriteriaInterface);
 
@@ -25,18 +26,21 @@ interface MarketersRepositoryInterface
      * Salvar Marketers - Feirantes
      * @params \GamaAcademy\MarketersRegister\Api\Data\MarketersInterface $marketers
      * @return \GamaAcademy\MarketersRegister\Api\Data\MarketersInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function save(MarketersInterface $marketers);
 
     /**
      * Deletar Marketers - Feirantes
      * @params \GamaAcademy\MarketersRegister\Api\Data\MarketersInterface $marketers
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function delete(MarketersInterface $marketers);
 
     /**
      * Deletar por ID Marketers - Feirantes
      * @params string $idMarketers
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function deleteById($idMarketers);
 
